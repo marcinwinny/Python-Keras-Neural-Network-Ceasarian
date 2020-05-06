@@ -1,0 +1,27 @@
+KERAS NN PROJECT:
+
+Activation functions:
+https://keras.io/activations/
+
+Optimisers:
+https://keras.io/optimizers/
+
+Loss function:
+https://keras.io/losses/
+
+////////////////////////////////////////////////////////////////////
+
+Understanding charts and improving:
+https://machinelearningmastery.com/display-deep-learning-model-training-history-in-keras/
+
+Visualise model:
+https://machinelearningmastery.com/visualize-deep-learning-neural-network-model-keras/
+
+Save and load:
+https://machinelearningmastery.com/save-load-keras-deep-learning-models/
+
+How to make predictions:
+https://machinelearningmastery.com/how-to-make-classification-and-regression-predictions-for-deep-learning-models-in-keras/
+
+How to use Keras API:
+https://machinelearningmastery.com/keras-functional-api-deep-learning/
