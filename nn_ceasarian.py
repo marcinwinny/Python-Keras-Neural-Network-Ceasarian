@@ -10,7 +10,21 @@ import random
 #best: elu,elu,sigmoid,12,8,binary_crossentropy, adam, 200, 10
 
 activision_list = ['elu', 'softmax', 'selu', 'softplus', 'softsign', 'relu', 'tanh', 'sigmoid', 'hard_sigmoid', 'exponential', 'linear']
-loss_function_list = ['mean_squared_error', 'mean_absolute_error', 'mean_absolute_percentage_error', 'mean_squared_logarithmic_error','squared_hinge', 'hinge', 'categorical_hinge', 'logcosh', 'huber_loss', 'categorical_crossentropy''sparse_categorical_crossentropy', 'binary_crossentropy', 'kullback_leibler_divergence','poisson', 'cosine_proximity'] 
+loss_function_list = [		
+ 'mean_squared_logarithmic_error',		#this
+ 'logcosh', 							#this
+ 'binary_crossentropy', 				#this
+	#  'huber_loss', 							#this
+	#  'kullback_leibler_divergence',
+	#  'poisson', 
+	#  'squared_hinge', 
+	#  'hinge', 
+	#  'categorical_hinge', 
+	#  'cosine_proximity'
+	#  'mean_squared_error',
+	#  'mean_absolute_error', 
+	#  'mean_absolute_percentage_error', 
+ ] 
 
 def print_information():
 
@@ -78,10 +92,17 @@ def switch_optimazer(arg):
 #ACTIVITION OPTIONS:
 #elu, softmax, selu, softplus, softsign, relu, tanh, sigmoid, hard_sigmoid, exponential, linear
 first_activation = 'elu'
+first_activation = random_activision()
 second_activation = 'elu'
+second_activation = random_activision()
+
 third_activation = 'sigmoid'
-first_layer_size = 12
-second_layer_size = 8
+#12,8
+first_layer_size = 80
+first_layer_size = random.randint(10,100)
+second_layer_size = 50
+second_layer_size = random.randint(10,100)
+
 
 #LOSS FUNCTION
 #mean_squared_error, mean_absolute_error, mean_absolute_percentage_error, mean_squared_logarithmic_error
@@ -89,13 +110,18 @@ second_layer_size = 8
 #sparse_categorical_crossentropy, binary_crossentropy, kullback_leibler_divergence
 #poisson, cosine_proximity, is_categorical_crossentropy
 
+loss_function = 'mean_squared_logarithmic_error'
 loss_function = random_loss_function()
+print(loss_function)
 
 #OPTIMIZERS
-optimizer_function = switch_optimazer(1)
+optimizer_function = switch_optimazer(5)
 
-number_of_epochs = 200
-number_batch_size = 60
+number_of_epochs = 1000
+# number_of_epochs = random.randint(100,300)
+number_batch_size = 10
+number_batch_size = random.randint(5,80)
+
 val_split = 0.15
 
 # load the dataset
@@ -134,6 +160,6 @@ predictions = model.predict_classes(X)
 # summarize the first 5 cases 
 # test_set_prediction()
 
+print_information()
 plot_history(history)
 
-print_information()
