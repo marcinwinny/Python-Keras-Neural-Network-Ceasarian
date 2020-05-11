@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 import random
 import numpy
 
-
 #best: elu,elu,sigmoid,12,8,binary_crossentropy, adam, 200, 10
 
 activision_list = ['elu', 'softmax', 'selu', 'softplus', 'softsign', 'relu', 'tanh', 'sigmoid', 'hard_sigmoid', 'exponential', 'linear']
@@ -16,16 +15,16 @@ loss_function_list = [
  'mean_squared_logarithmic_error',		#this
  'logcosh', 							#this
  'binary_crossentropy', 				#this
-	#  'huber_loss', 							#this
-	#  'kullback_leibler_divergence',
-	#  'poisson', 
-	#  'squared_hinge', 
-	#  'hinge', 
-	#  'categorical_hinge', 
-	#  'cosine_proximity'
-	#  'mean_squared_error',
-	#  'mean_absolute_error', 
-	#  'mean_absolute_percentage_error', 
+	 'huber_loss', 							#this
+	 'kullback_leibler_divergence',
+	 'poisson', 
+	 'squared_hinge', 
+	 'hinge', 
+	 'categorical_hinge', 
+	 'cosine_proximity',
+	 'mean_squared_error',
+	 'mean_absolute_error', 
+	 'mean_absolute_percentage_error', 
  ] 
 
 def print_information():
@@ -90,75 +89,77 @@ def switch_optimazer(arg):
 	}
 	return switcher.get(arg, "Invalid number")
 
+max_acc_val=0.0
+
 # load the dataset
-dataset = loadtxt('caesarian_dataset.arff', delimiter=',')
+dataset = loadtxt('messidor_data.arff', delimiter=',')
 
 # split into input (X) and output (y) variables
-X = numpy.array(dataset[:,0:5])
-X[:,0] = X[:,0]/40
-X[:,1] = X[:,1]/4
-X[:,2] = X[:,2]/2
-X[:,3] = X[:,3]/2
-y = dataset[:,5]
-val_split = 0.20
+X = numpy.array(dataset[:,0:19])
+y = dataset[:,19]
+val_split = 0.2
+
+while(max_acc_val < 0.9):
+
+    #define variables
+    #ACTIVITION OPTIONS:
+    #elu, softmax, selu, softplus, softsign, relu, tanh, sigmoid, hard_sigmoid, exponential, linear
+    first_activation = 'relu'
+    first_activation = random_activision()
+    second_activation = 'relu'
+    second_activation = random_activision()
+
+    third_activation = 'sigmoid'
+    #12,8
+    # first_layer_size = 80
+    first_layer_size = random.randint(5,50)
+    # second_layer_size = 50
+    second_layer_size = random.randint(5,50)
+
+    #LOSS FUNCTION
+    #mean_squared_error, mean_absolute_error, mean_absolute_percentage_error, mean_squared_logarithmic_error
+    #squared_hinge, hinge, categorical_hinge, logcosh, huber_loss, categorical_crossentropy
+    #sparse_categorical_crossentropy, binary_crossentropy, kullback_leibler_divergence
+    #poisson, cosine_proximity, is_categorical_crossentropy
+
+    loss_function = 'binary_crossentropy'
+    loss_function = random_loss_function()
+
+    #OPTIMIZERS
+    # optimizer_function = switch_optimazer(5)
+    optimizer_function = switch_optimazer(random.randint(1,7))
+
+    number_of_epochs = 500
+    # number_of_epochs = random.randint(100,300)
+    # number_batch_size = 10
+    number_batch_size = random.randint(5,80)
+
+    # define the keras model
+    model = Sequential()
+    model.add(Dense(first_layer_size, input_dim=19, activation = first_activation))
+    model.add(Dense(second_layer_size, activation = second_activation))
+    model.add(Dense(1, activation = third_activation))
+
+    # compile the keras model
+    model.compile(loss=loss_function, optimizer=optimizer_function, metrics=['accuracy'])
+
+    # fit the keras model on the dataset
+
+    history = model.fit(X, y, validation_split=val_split,epochs=number_of_epochs, batch_size=number_batch_size, verbose=0)
+
+    # list all data in history   
+    # summarize history for accuracy
+    # make class predictions with the model
+    predictions = model.predict_classes(X)
+    # summarize the first 5 cases 
+    # test_set_prediction()
+    max_acc_val = max(history.history['val_accuracy'])
+    print('MAX_DOKLADNOSC_WALIDACJI: %.2f' % max_acc_val)
+    print('Optimizer: ' + str(optimizer_function))
+    print_information()
+    print()
 
 
-#define variables
-#ACTIVITION OPTIONS:
-#elu, softmax, selu, softplus, softsign, relu, tanh, sigmoid, hard_sigmoid, exponential, linear
-#LOSS FUNCTION
-#mean_squared_error, mean_absolute_error, mean_absolute_percentage_error, mean_squared_logarithmic_error
-#squared_hinge, hinge, categorical_hinge, logcosh, huber_loss, categorical_crossentropy
-#sparse_categorical_crossentropy, binary_crossentropy, kullback_leibler_divergence
-#poisson, cosine_proximity, is_categorical_crossentropy
-
-first_activation = 'relu'
-# first_activation = random_activision()
-second_activation = 'relu'
-# second_activation = random_activision()
-third_activation = 'sigmoid'
-
-first_layer_size = 45
-# first_layer_size = random.randint(10,100)
-second_layer_size = 30
-# second_layer_size = random.randint(10,100)
-
-loss_function = 'binary_crossentropy'
-# loss_function = 'mean_squared_logarithmic_error'
-# loss_function = random_loss_function()
-print(loss_function)
-
-#OPTIMIZERS
-optimizer_function = switch_optimazer(5)
-# optimizer_function = switch_optimazer(random.randint(1,7))
-
-number_of_epochs = 150
-# number_of_epochs = random.randint(100,300)
-number_batch_size = 10
-# number_batch_size = random.randint(5,80)
-
-# define the keras model
-model = Sequential()
-model.add(Dense(first_layer_size, input_dim=5, activation = first_activation))
-model.add(Dense(second_layer_size, activation = second_activation))
-model.add(Dense(1, activation = third_activation))
-
-# compile the keras model
-model.compile(loss=loss_function, optimizer='adam', metrics=['accuracy'])
-
-# fit the keras model on the dataset
-
-history = model.fit(X, y, validation_split=val_split,epochs=number_of_epochs, batch_size=number_batch_size, verbose=1)
-
-# list all data in history
-print(history.history.keys())
-
-# summarize history for accuracy
-# make class predictions with the model
-predictions = model.predict_classes(X)
-# summarize the first 5 cases 
-# test_set_prediction()
-
-print_information()
 plot_history(history)
+print('////////////////////////////////')
 

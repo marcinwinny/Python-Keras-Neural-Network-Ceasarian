@@ -90,7 +90,7 @@ def switch_optimazer(arg):
 
 max_acc_val=0.0
 
-while(max_acc_val < 0.8):
+while(max_acc_val < 0.9):
 
     #define variables
     #ACTIVITION OPTIONS:
